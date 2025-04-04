@@ -19,7 +19,8 @@ class Post(models.Model):
         ordering = ['-created_at']
 
     def clean(self):
-        if not self.caption and not self.image and not self.video:
+        caption = self.caption.strip() if self.caption else ''
+        if not caption and not self.image and not self.video:
             raise ValidationError('You must choose at least one image,caption or video')
     
     def save(self, *args, **kwargs):

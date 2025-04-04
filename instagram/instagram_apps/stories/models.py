@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.timezone import now
+from django.utils import timezone
 from django.core.exceptions import ValidationError
 from datetime import timedelta
 
@@ -17,12 +17,14 @@ class Story(models.Model):
     class Meta:
         ordering = ['-created_at']
     
-    @classmethod
-    def visible_stories(cls):
-        return cls.objects.filter(created_at__gte=now() - timedelta(hours=24))
+    @staticmethod
+    def visible_stories():
+        time_limit = timezone.now() - timedelta(hours=24)
+        return Story.objects.filter(created_at__gte=time_limit)
 
     def clean(self):
-        if not self.caption and not self.image and not self.video:
+        caption = self.caption.strip() if self.caption else ''
+        if not caption and not self.image and not self.video:
             raise ValidationError('You must choose at least one image,caption or video')
     
     def save(self, *args, **kwargs):
