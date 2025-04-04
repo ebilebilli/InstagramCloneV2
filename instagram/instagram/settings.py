@@ -41,12 +41,14 @@ INSTALLED_APPS = [
 
 
     #apps
-    'apps.fallowers',
-    'apps.interactions',
-    'apps.posts',
-    'apps.stories',
-    'apps.users'
+    'instagram_apps.followers',
+    'instagram_apps.interactions',
+    'instagram_apps.posts',
+    'instagram_apps.stories',
+    'instagram_apps.users'
 ]
+
+AUTH_USER_MODEL = 'users.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,6 +77,8 @@ TEMPLATES = [
         },
     },
 ]
+
+
 
 WSGI_APPLICATION = 'instagram.wsgi.application'
 
