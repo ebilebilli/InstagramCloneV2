@@ -1,16 +1,15 @@
 from rest_framework import serializers 
 
-from .models import Post
+from .models import Story
 from instagram_apps.users.serializers import CustomUserSerializer
 
-
-class PostSerializer(serializers.ModelSerializer):
+class StorySerializer(serializers.ModelSerializer):
     user = CustomUserSerializer(read_only=True)
     image_url = serializers.SerializerMethodField()
     video_url = serializers.SerializerMethodField()
 
     class Meta:
-        model = Post
+        model = Story
         fields = '__all__' 
     
     def get_image_url(self, object):
@@ -23,5 +22,3 @@ class PostSerializer(serializers.ModelSerializer):
             return object.video.url
         return None
          
-
-            
