@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from django.db import models
 
 from instagram_apps.posts.models import Post
 from instagram_apps.followers.models import Follow
@@ -19,13 +20,13 @@ class OpenProfilePostListAPIView(APIView):
     def get(self, request):
         pagination = self.pagination_class()
         posts = Post.objects.filter(
-            profile_profile_status=CustomUser.OPEN_PROFILE).order_by('-created_at')
+            user__profile_status=CustomUser.OPEN_PROFILE).order_by('-created_at')
         
         if posts.exists():
             result_page = pagination.paginate_queryset(posts, request)
             serializer = PostSerializer(result_page, many=True, context={'request': request})
             return pagination.get_paginated_response(serializer.data)
-        return Response({'message': 'There are no posts'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'There are no posts'}, status=status.HTTP_200_OK)
 
 
 class PrivateProfilePostListAPIView(APIView):
@@ -36,15 +37,15 @@ class PrivateProfilePostListAPIView(APIView):
     def get(self, request):
         pagination = self.pagination_class()
         user = request.user
-        posts = Post.objects.filter(
-            user__profile_status=CustomUser.PRIVATE_PROFILE).order_by('-created_at')
-        posts = posts.filter(user__in=user.followers.all())
+        posts = Post.objects.filter(user__profile_status=CustomUser.PRIVATE_PROFILE).filter(
+            models.Q(user__in=user.following.all()) | models.Q(user=user)
+        ).order_by('-created_at')
 
         if posts.exists():
             result_page = pagination.paginate_queryset(posts, request)
             serializer = PostSerializer(result_page, many=True, context={'request': request})
             return pagination.get_paginated_response(serializer.data)
-        return Response({'message': 'No posts available'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'No posts available'}, status=status.HTTP_200_OK)
 
 
 
