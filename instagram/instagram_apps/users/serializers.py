@@ -8,6 +8,14 @@ class CustomUserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = '__all__'
 
+    def to_representation(self, instance):
+        request = self.context.get('request')
+        if instance.profile_status == CustomUser.PRIVATE_PROFILE and not request.user.is_authenticated:
+            return {
+                'username': instance.username,
+                'profile_picture': instance.profile_picture.url if instance.profile_picture else None,
+                'message': 'This profile is private'
+            }
           
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])

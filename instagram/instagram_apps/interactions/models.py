@@ -37,10 +37,10 @@ class Like(models.Model):
 
     class Meta:
         constraints = [
-        models.UniqueConstraint(fields=['user', 'post'], name='unique_user_post_like'),
-        models.UniqueConstraint(fields=['user', 'story'], name='unique_user_story_like'),
-        models.UniqueConstraint(fields=['user', 'comment'], name='unique_user_comment_like'),
-    ]
+            models.UniqueConstraint(fields=['user', 'post'], name='unique_user_post_like'),
+            models.UniqueConstraint(fields=['user', 'story'], name='unique_user_story_like'),
+            models.UniqueConstraint(fields=['user', 'comment'], name='unique_user_comment_like'),
+            ]
     
     def clean(self):
         if not self.post and not self.story and not self.comment:

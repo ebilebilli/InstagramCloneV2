@@ -4,7 +4,6 @@ from django.core.exceptions import ValidationError
 from instagram_apps.users.models import CustomUser
 
 
-
 class Post(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 

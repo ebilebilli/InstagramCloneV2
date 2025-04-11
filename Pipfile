@@ -5,9 +5,12 @@ name = "pypi"
 
 [packages]
 django = "*"
-djangorestframework = "*"
 pillow = "*"
 pytest = "*"
+pyjwt = "*"
+dotenv = "*"
+djangorestframework-simplejwt = "*"
+djangorestframework = "*"
 
 [dev-packages]
 
