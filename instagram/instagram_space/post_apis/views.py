@@ -23,9 +23,9 @@ class OpenProfilePostListAPIView(APIView):
         
         if posts.exists():
             result_page = pagination.paginate_queryset(posts, request)
-            serializer = PostSerializer(result_page, many=True)
+            serializer = PostSerializer(result_page, many=True, context={'request': request})
             return pagination.get_paginated_response(serializer.data)
-        return Response({'message': 'There are not posts'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'message': 'There are no posts'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class PrivateProfilePostListAPIView(APIView):
@@ -37,14 +37,14 @@ class PrivateProfilePostListAPIView(APIView):
         pagination = self.pagination_class()
         user = request.user
         posts = Post.objects.filter(
-            status=CustomUser.PRIVATE_PROFILE).order_by('-created_at')
+            user__profile_status=CustomUser.PRIVATE_PROFILE).order_by('-created_at')
         posts = posts.filter(user__in=user.followers.all())
 
         if posts.exists():
             result_page = pagination.paginate_queryset(posts, request)
-            serializer = PostSerializer(result_page, many=True)
+            serializer = PostSerializer(result_page, many=True, context={'request': request})
             return pagination.get_paginated_response(serializer.data)
-        return Response({'message': 'No posts available'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'message': 'No posts available'}, status=status.HTTP_204_NO_CONTENT)
 
 
 
