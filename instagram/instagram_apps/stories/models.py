@@ -20,7 +20,7 @@ class Story(models.Model):
     @staticmethod
     def visible_stories():
         time_limit = timezone.now() - timedelta(hours=24)
-        return Story.objects.filter(created_at__gte=time_limit)
+        return Story.visible_stories().objects.filter(created_at__gte=time_limit)
 
     def clean(self):
         caption = self.caption.strip() if self.caption else ''

@@ -6,10 +6,9 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.db import models
 
 from instagram_apps.posts.models import Post
-from instagram_apps.followers.models import Follow
 from instagram_apps.users.models import CustomUser
 from instagram_apps.posts.serializers import PostSerializer
-from instagram.instagram_space.utils.custom_pagination import CustomPagination
+from instagram_space.utils.custom_pagination import CustomPagination
 from instagram_space.utils.permissions import *
 
 
@@ -107,5 +106,28 @@ class PrivateProfilePostDetail(APIView):
         return Response({'message': 'You do not have permission'}, status=status.HTTP_403_FORBIDDEN)
 
 
+class CreateSinglePostAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
+    def post(self, request, *args, **kwargs):
+        serializer = PostSerializer(data=request.data, many=False)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreateMultiplePostsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, request, *args, **kwargs):
+        serializer = PostSerializer(data=request.data, many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+         
+         
 

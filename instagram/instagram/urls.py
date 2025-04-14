@@ -9,8 +9,8 @@ urlpatterns = [
 
     # path('api/v1/', include('apis.follower_apis.urls')),
     # path('api/v1/', include('apis.interaction_apis.urls')),
-    # path('api/v1/', include('apis.post_apis.urls')),
-    # path('api/v1/', include('apis.story_apis.urls')),
+    path('api/v1/', include('instagram_space.post_apis.urls')),
+    path('api/v1/', include('instagram_space.story_apis.urls')),
     # path('api/v1/',include('apis.user_apis.urls') ),
 ]
 

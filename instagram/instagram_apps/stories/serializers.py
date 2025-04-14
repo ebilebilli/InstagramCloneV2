@@ -7,7 +7,7 @@ class StorySerializer(serializers.ModelSerializer):
     user = CustomUserSerializer(read_only=True)
     image_url = serializers.SerializerMethodField()
     video_url = serializers.SerializerMethodField()
-
+  
     class Meta:
         model = Story
         fields = '__all__' 
@@ -21,4 +21,6 @@ class StorySerializer(serializers.ModelSerializer):
         if object.video:
             return object.video.url
         return None
-         
+    
+    def get_is_expired(self, obj):
+        return obj.is_expired()
